@@ -1,0 +1,9 @@
+.gp-card {
+  min-width: 192px;
+  max-width: 256px;
+  overflow: hidden;
+  @at-root #{&}__img {
+    width: 128px;
+    height: 128px;
+  }
+}

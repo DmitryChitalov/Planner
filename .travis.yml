@@ -1,0 +1,34 @@
+language: python
+python:
+  - "3.6"
+dist: bionic
+
+services:
+  - postgresql
+
+env:
+  - GEEKPLANNER_DEVELOPMENT=true
+
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+      - postgresql-10
+      - postgresql-client-10
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - sudo service postgresql start 10
+  - sudo service postgresql status 10
+  - psql postgres -f $TRAVIS_BUILD_DIR/create_db.sql -U postgres
+
+script:
+  - python $TRAVIS_BUILD_DIR/GeekPlanner/manage.py makemigrations
+  - python $TRAVIS_BUILD_DIR/GeekPlanner/manage.py migrate
+  - python $TRAVIS_BUILD_DIR/GeekPlanner/manage.py test authapp.tests
+
+branches:
+  only:
+    - develop
